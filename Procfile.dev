@@ -1,0 +1,1 @@
+web: crystal run src/server.cr

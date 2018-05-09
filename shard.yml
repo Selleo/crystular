@@ -1,16 +1,14 @@
-name: crystal-regex
+name: crystal_regex
 version: 0.1.0
-
+license: MIT
 authors:
   - Bartlomiej Wojtowicz <b.wojtowicz@selleo.com>
 
 targets:
-  crystal-regex:
-    main: src/crystal-regex.cr
+  server:
+    main: src/server.cr
 
 crystal: 0.24.2
-
-license: MIT
 
 dependencies:
   kemal:
