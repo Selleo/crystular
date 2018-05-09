@@ -1,0 +1,1 @@
+KEMAL_ENV=test crystal spec

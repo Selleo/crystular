@@ -1,0 +1,17 @@
+name: crystal-regex
+version: 0.1.0
+
+authors:
+  - Bartlomiej Wojtowicz <b.wojtowicz@selleo.com>
+
+targets:
+  crystal-regex:
+    main: src/crystal-regex.cr
+
+crystal: 0.24.2
+
+license: MIT
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
