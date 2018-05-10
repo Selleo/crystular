@@ -28,4 +28,13 @@ class Re::Result
     io << ">"
     io
   end
+
+  def to_json(io : IO)
+    JSON.build(io) do |json|
+      json.object do
+        json.field "ranges", @ranges
+        json.field "matches", @matches
+      end
+    end
+  end
 end

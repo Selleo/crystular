@@ -23,4 +23,15 @@ struct Re::Match
     io << "]>"
     io
   end
+
+  def to_json(json : JSON::Builder)
+    json.array do
+      @groups.each do |group|
+        json.object do
+          json.field "key", group.key
+          json.field "text", group.text
+        end
+      end
+    end
+  end
 end
