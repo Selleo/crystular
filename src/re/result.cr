@@ -29,12 +29,10 @@ class Re::Result
     io
   end
 
-  def to_json(io : IO)
-    JSON.build(io) do |json|
-      json.object do
-        json.field "ranges", @ranges
-        json.field "matches", @matches
-      end
+  def to_json(json : JSON::Builder)
+    json.object do
+      json.field "ranges", @ranges
+      json.field "matches", @matches
     end
   end
 end

@@ -1,11 +1,11 @@
 class Re::Parser
   class ParseError < Exception; end
   class NoMatchError < Exception; end
-  class InvalidOption < Exception; end
+  class InvalidOptionError < Exception; end
 
   def parse(regex_str : String, options : String, data : String)
-    raise InvalidOption.new("Invalid regex option") if options =~ /[^imx]/
-    
+    raise InvalidOptionError.new("Invalid regex option") if options =~ /[^imx]/
+
     opts = Regex::Options::None
     opts |= Regex::Options::IGNORE_CASE if options.includes?("i")
     opts |= Regex::Options::MULTILINE if options.includes?("m")
@@ -14,6 +14,9 @@ class Re::Parser
     Result.new.tap do |acc|
       next_match(acc, Regex.new(regex_str, opts), data, 0, true)
     end
+
+  rescue ex : ArgumentError
+    raise ParseError.new("Parse error: #{ex.message}")
   end
 
   private def next_match(acc, regex, data, pos, first)
@@ -39,7 +42,7 @@ class Re::Parser
       next_match(acc, regex, data, last + 1, false)
     else
       if first
-        raise NoMatchError.new("No matches")
+        raise NoMatchError.new("No matches found")
       end
     end
   end
