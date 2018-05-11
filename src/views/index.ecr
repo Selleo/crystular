@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Crystal regex tester</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <style>
+    #templates { display: none; }
+    
+    body {
+      background: #1e1f1c;
+      color: #f1f8f2;
+    }
+    h5 {
+      color: #a6e22a;
+    }
+    input {
+      background: #272822 !important;
+      border-color: #464741 !important;
+      color: #f8f8f2 !important; 
+    }
+    textarea {
+      background: #272822 !important;
+      border-color: #464741 !important;
+      color: #e6cf57 !important; 
+    }
+
+    input::placeholder {
+      color: #595953 !important;
+      opacity: 1;
+    }
+    
+    #match_result {
+      white-space: pre-wrap;
+      color: #f8f8f2;
+    }
+
+    #match_result .marked {
+      background: #f92672;
+      padding: 3px 3px 1px 3px;
+      border-radius: 6px;
+    }
+
+    #match_result .special {
+      color: #664e97;
+      padding-left: 1px;
+      font-size: 13px;
+      font-weight: bolder;
+      letter-spacing: 0.6px;
+    }
+
+    #match_result .special.lf::after {
+      content: "\\n";
+    }
+    #match_result .special.cr::after {
+      content: "\\r";
+    }
+    #match_result .special.tab::after {
+      content: "\\t";
+    }
+
+    .match_group:first-child {
+      margin-top: 2rem;
+    }
+
+    .match_group {
+      color: #f92672;
+    }
+
+    .match_list {
+      list-style-type: none;
+      padding-left: 1rem;
+      color: #664e97;
+    }
+
+    .match_list .key {
+      padding-right: 2rem;
+    }
+
+    .match_list .value {
+      color: #f8f8f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h5>Regular expression:</h5>
+    <div class="form-row">
+      <div class="form-group col-md-11">
+        <input id="regex" name="regex" class="form-control form-control-lg" type="text" placeholder="" value="(.(o))">
+      </div>
+      <div class="form-group col-md-1">
+        <input id="options" name="options" class="form-control form-control-lg" type="text" placeholder="imx">
+      </div>
+    </div>
+
+    <h5>Test string:</h5>
+    <div class="row">
+      <div class="col-md-6">
+        <textarea id="text" name="text" class="form-control form-control-lg" rows="16">hello
+wolrd</textarea>
+      </div>
+      <div class="col-md-6">
+        <div id="errors"></div>
+        <div id="match_result"></div>
+        <div id="match_groups"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="templates">
+    <div id="tmpl_match">
+      <h6 class="match_group"></h6>
+      <ul class="match_list"></ul>
+    </div>
+
+    <div id="tmpl_match_item">
+      <table>
+        <tbody>
+          <tr>
+            <td class="key"></td>
+            <td class="value"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tmpl_alert">
+      <div class="alert alert-danger fade show" role="alert">
+        <strong></strong> <span></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    function clearOutput() {
+      $("#errors").empty();
+      $("#match_result").empty();
+      $("#match_groups").empty();
+    }
+
+    function tokenize(text) {
+      var tokens = [];
+      var buf = "";
+      for (var i = 0; i < text.length; i++) {
+        var char = text.charAt(i);
+        if (char === '\n' || char === '\r' || char === '\t') {
+          if (buf !== "") {
+            tokens.push(buf);
+            buf = "";
+          }
+          tokens.push(char);
+        } else {
+          buf += char;
+        }
+      }
+
+      if (buf !== "")
+        tokens.push(buf);
+
+      return tokens;
+    }
+
+    function appendText(node, text) {
+      var tokens = tokenize(text);
+      tokens.forEach(function(token) {
+        if (token === '\t') {
+          node.append($('<span class="special tab" />'));
+        } else if (token === '\r') {
+          node.append($('<span class="special cr" />'));
+        } else if (token === '\n') {
+          node.append($('<span class="special lf" />'));
+          node.append($('<br>'));
+        } else {
+          node.append(document.createTextNode(token));
+        }
+      });
+
+      return node;
+    }
+
+    function handleSuccess(result, s) {
+      var tmplMatch = $("#tmpl_match");
+      var tmplMatchItem = $("#tmpl_match_item table tbody");
+      var matchResult = $("#match_result");
+      var matchGroups = $("#match_groups");
+
+      clearOutput();
+      var index = 1;
+
+      result.matches.forEach(function(match) {
+        var tmpl = tmplMatch.clone();
+        tmpl.find(".match_group").text("Match " + index);
+        var list = tmpl.find(".match_list");
+
+        match.forEach(function(group) {
+          var item = tmplMatchItem.clone();
+          item.find(".key").text(group.key);
+          item.find(".value").text(group.text);
+          list.append(item.children());
+        });
+
+        matchGroups.append(tmpl.children());
+        ++index;
+      });
+
+      var start = 0;
+      var buf = $("<div/>");
+
+      result.ranges.forEach(function(range) {
+        var a = range[0], b = range[1];
+        var text = s.substring(start, a);
+        var matchedText = s.substring(a, b);
+
+        appendText(buf, text);
+        if (a === b) {
+          buf.append($('<span class="marked boundry" />'));
+        } else {
+          buf.append(appendText($('<span class="marked" />'), matchedText));
+        }
+        
+        start = b;
+      });
+      appendText(buf, s.substring(start, s.length));
+
+      matchResult.append(buf);
+    }
+
+    function handleError(msg) {
+      clearOutput();
+      var tmpl = $("#tmpl_alert").clone();
+      var parts = msg.split(": ");
+
+      tmpl.find("strong").text(parts.shift());
+      tmpl.find("span").text(parts.join(": "));
+
+      $("#errors").html(tmpl.children());
+    }
+
+    function getParams() {
+      return {
+        regex: $("#regex").val(),
+        options: $("#options").val(),
+        text: $("#text").val()
+      };
+    }
+
+    function send() {
+      var body = getParams();
+      
+      $.ajax({
+        url: "/api/test_regex",
+        type: "POST",
+        data: JSON.stringify(body),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(response) {
+          handleSuccess(response.result, body.text);
+        }
+      }).fail(function(response) {
+        handleError(response.responseJSON.error);
+      });
+    }
+
+    $(function() {
+      $("#regex").on('input', send);
+      $("#options").on('input', send);
+      $("#text").on('input', send);
+      
+      var params = getParams();
+      if (params.regex !== "" && params.text !== "")
+        send();
+    });
+  </script>
+</body>
+</html> 
+

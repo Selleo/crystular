@@ -22,24 +22,26 @@ class Re::Parser
   private def next_match(acc, regex, data, pos, first)
     name_table = regex.name_table
     result = regex.match(data, pos)
-
+    
     if !result.nil?
       last = -1
       match = Match.new
-
+      
       result.size.times do |i|
         a, b = build_range(result, i)
+
         if i == 0
           acc << [a, b]
+          # for boundries need to skip one forward
+          last = (a == b) ? b + 1 : b
         else
           key = name_table.fetch(i, i).to_s
           match << Group.new(key: key, text: data[a...b])
         end
-        last = b
       end
 
       acc << match if !match.groups.empty?
-      next_match(acc, regex, data, last + 1, false)
+      next_match(acc, regex, data, last, false)
     else
       if first
         raise NoMatchError.new("No matches found")

@@ -2,19 +2,19 @@ require "kemal"
 require "./app/env"
 require "./re/**"
 
-struct Params
-  JSON.mapping({
-    regex: String,
-    options: String,
-    data: String
-  })
+get "/" do
+  render "src/views/index.ecr"
 end
 
 post "/api/test_regex" do |env|
+  params = env.params.json
+  result = Re::Parser.new.parse(
+    params["regex"].as(String),
+    params["options"].as(String),
+    params["text"].as(String)
+  )
   env.response.content_type = "application/json"
-  params = Params.from_json(env.request.body.to_s)
-  result = Re::Parser.new.parse(params.regex, params.options, params.data)
-
+    
 rescue ex : Re::Parser::ParseError | Re::Parser::NoMatchError | Re::Parser::InvalidOptionError
   env.response.status_code = 422
   {

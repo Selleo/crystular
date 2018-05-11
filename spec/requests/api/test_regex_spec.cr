@@ -5,7 +5,7 @@ def test_regex(regex : String?, options : String?, data : String?)
     json.object do
       json.field "regex", regex if !regex.nil?
       json.field "options", options if !options.nil?
-      json.field "data", data if !data.nil?
+      json.field "text", data if !data.nil?
     end
   end
 
@@ -19,9 +19,9 @@ end
 describe "/api/test_regex" do
   it "returns valid match" do
     response = test_regex("he(?<double>ll)o", "", "hello world")
-    json = parse_body(response)
 
     response.status_code.should eq 200
+    json = parse_body(response)
     json["success"].should eq true
     json["result"].should eq({
       "ranges" => [[0, 5]],
@@ -39,27 +39,27 @@ describe "/api/test_regex" do
   describe "errors" do
     it "returns invalid option" do
       response = test_regex("o", "z", "hello world")
-      json = parse_body(response)
-
+      
       response.status_code.should eq 422
+      json = parse_body(response)
       json["success"].should eq false
       json["error"].should eq "Invalid regex option"
     end
 
     it "returns no matches" do
       response = test_regex("[abc]", "", "hello")
-      json = parse_body(response)
 
       response.status_code.should eq 422
+      json = parse_body(response)
       json["success"].should eq false
       json["error"].should eq "No matches found"
     end
 
     it "returns parse error" do
       response = test_regex("())", "", "hello")
-      json = parse_body(response)
-
+      
       response.status_code.should eq 422
+      json = parse_body(response)
       json["success"].should eq false
       json["error"].should eq "Parse error: unmatched parentheses at 2"
     end

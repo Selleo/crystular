@@ -44,6 +44,91 @@ describe Re::Parser do
       result.ranges.should eq [[3, 5], [6, 8]]
     end
 
+    it "consecutive match" do
+      result = parse("(.(o))", "", "awesoooome")
+
+      result.matches.size.should eq 2
+      result.matches[0].groups.size.should eq 2
+      result.matches[0].groups[0].key.should eq "1"
+      result.matches[0].groups[0].text.should eq "so"
+      result.matches[0].groups[1].key.should eq "2"
+      result.matches[0].groups[1].text.should eq "o"
+      result.matches[1].groups.size.should eq 2
+      result.matches[1].groups[0].key.should eq "1"
+      result.matches[1].groups[0].text.should eq "oo"
+      result.matches[1].groups[1].key.should eq "2"
+      result.matches[1].groups[1].text.should eq "o"
+      result.ranges.should eq [[3, 5], [5, 7]]
+    end
+
+    it "any + empty group match" do
+      result = parse("(.())", "m", "hello")
+
+      result.matches.size.should eq 5
+      result.matches[0].groups.size.should eq 2
+
+      result.matches[0].groups[0].key.should eq "1"
+      result.matches[0].groups[0].text.should eq "h"
+      result.matches[0].groups[1].key.should eq "2"
+      result.matches[0].groups[1].text.should eq ""
+
+      result.matches[1].groups[0].key.should eq "1"
+      result.matches[1].groups[0].text.should eq "e"
+      result.matches[1].groups[1].key.should eq "2"
+      result.matches[1].groups[1].text.should eq ""
+
+      result.matches[2].groups[0].key.should eq "1"
+      result.matches[2].groups[0].text.should eq "l"
+      result.matches[2].groups[1].key.should eq "2"
+      result.matches[2].groups[1].text.should eq ""
+
+      result.matches[3].groups[0].key.should eq "1"
+      result.matches[3].groups[0].text.should eq "l"
+      result.matches[3].groups[1].key.should eq "2"
+      result.matches[3].groups[1].text.should eq ""
+
+      result.matches[4].groups[0].key.should eq "1"
+      result.matches[4].groups[0].text.should eq "o"
+      result.matches[4].groups[1].key.should eq "2"
+      result.matches[4].groups[1].text.should eq ""
+
+      result.ranges.should eq [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]
+    end
+
+    it "empty group match + any" do
+      result = parse("(.())", "m", "hello")
+
+      result.matches.size.should eq 5
+      result.matches[0].groups.size.should eq 2
+
+      result.matches[0].groups[0].key.should eq "1"
+      result.matches[0].groups[0].text.should eq "h"
+      result.matches[0].groups[1].key.should eq "2"
+      result.matches[0].groups[1].text.should eq ""
+
+      result.matches[1].groups[0].key.should eq "1"
+      result.matches[1].groups[0].text.should eq "e"
+      result.matches[1].groups[1].key.should eq "2"
+      result.matches[1].groups[1].text.should eq ""
+
+      result.matches[2].groups[0].key.should eq "1"
+      result.matches[2].groups[0].text.should eq "l"
+      result.matches[2].groups[1].key.should eq "2"
+      result.matches[2].groups[1].text.should eq ""
+
+      result.matches[3].groups[0].key.should eq "1"
+      result.matches[3].groups[0].text.should eq "l"
+      result.matches[3].groups[1].key.should eq "2"
+      result.matches[3].groups[1].text.should eq ""
+
+      result.matches[4].groups[0].key.should eq "1"
+      result.matches[4].groups[0].text.should eq "o"
+      result.matches[4].groups[1].key.should eq "2"
+      result.matches[4].groups[1].text.should eq ""
+
+      result.ranges.should eq [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]
+    end
+
     it "case sensitive match" do
       expect_raises(Re::Parser::NoMatchError, "No matches") do
         parse("ll", "", "HELLO")
