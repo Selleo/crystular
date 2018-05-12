@@ -19,13 +19,16 @@
     }
     input {
       background: #272822 !important;
-      border-color: #464741 !important;
+      border-color: #23241F !important;
       color: #f8f8f2 !important; 
     }
     textarea {
       background: #272822 !important;
-      border-color: #464741 !important;
+      border-color: #23241F !important;
       color: #e6cf57 !important; 
+    }
+    input:focus, textarea:focus {
+      box-shadow: 0 0 0 .1rem #a6e22a !important;
     }
 
     input::placeholder {
@@ -33,18 +36,29 @@
       opacity: 1;
     }
     
+    .reference table code {
+      white-space: nowrap;
+    }
+
+    .reference table tr td:first-child {
+      padding-right: 1rem;
+    }
+
+    table tr
+      padding-right: 1rem;
+
     #match_result {
       white-space: pre-wrap;
       color: #f8f8f2;
     }
 
-    #match_result .marked {
+    .marked {
       background: #f92672;
       padding: 3px 3px 1px 3px;
       border-radius: 6px;
     }
 
-    #match_result .special {
+    .special {
       color: #664e97;
       padding-left: 1px;
       font-size: 13px;
@@ -52,13 +66,13 @@
       letter-spacing: 0.6px;
     }
 
-    #match_result .special.lf::after {
+    .special.lf::after {
       content: "\\n";
     }
-    #match_result .special.cr::after {
+    .special.cr::after {
       content: "\\r";
     }
-    #match_result .special.tab::after {
+    .special.tab::after {
       content: "\\t";
     }
 
@@ -87,6 +101,8 @@
 </head>
 <body>
   <div class="container">
+    <h1 class="text-center">Crystal regex tester</h1>
+
     <h5>Regular expression:</h5>
     <div class="form-row">
       <div class="form-group col-md-11">
@@ -107,6 +123,55 @@ wolrd</textarea>
         <div id="errors"></div>
         <div id="match_result"></div>
         <div id="match_groups"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-5">
+    <h2 class="text-center">Reference</h2>
+
+    <div class="row reference">
+      <div class="col-md-6">
+        <table>
+          <tbody>
+            <tr><td><code>[abc]</code></td><td>a, b, or c</td></tr>
+            <tr><td><code>[^abc]</code></td><td>any character except a, b, or c</td></tr>
+            <tr><td><code>[a-z]</code></td><td>any character from range a-z</td></tr>
+            <tr><td><code>[a-z0-9]</code></td><td>any character from range a-z or 0-9</td></tr>
+            <tr><td><code>.</code></td><td>any character</td></tr>
+            <tr><td><code>(...)</code></td><td>group capture</td></tr>
+            <tr><td><code>(a|b)</code></td><td>a or b</td></tr>
+            <tr><td><code>a?</code></td><td>zero or one of a</td></tr>
+            <tr><td><code>a*</code></td><td>zero or more of a</td></tr>
+            <tr><td><code>a+</code></td><td>one or more of a</td></tr>
+            <tr><td><code>a{3}</code></td><td>exactly 3 of a</td></tr>
+            <tr><td><code>a{3,}</code></td><td>3 or more of a</td></tr>
+            <tr><td><code>a{3,6}</code></td><td>between 3 and 6 of a</td></tr>
+            <tr><td><code>\s</code></td><td>whitespace character</td></tr>
+            <tr><td><code>\S</code></td><td>non-whitespace character</td></tr>
+            <tr><td><code>\d</code></td><td>digit</td></tr>
+            <tr><td><code>\D</code></td><td>non-digit</td></tr>
+            <tr><td><code>\w</code></td><td>word character (letter, number, underscore)</td></tr>
+            <tr><td><code>\W</code></td><td>non-word character</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table>
+          <tbody>
+            <tr><td><code>^</code></td><td>beginning of line</td></tr>
+            <tr><td><code>$</code></td><td>end of line</td></tr>
+            <tr><td><code>\A</code></td><td>beginning of string</td></tr>
+            <tr><td><code>\z</code></td><td>end of string</td></tr>
+            <tr><td><code>\Z</code></td><td>end of string (if string ends with a newline, it matches just before newline)</td></tr>
+            <tr><td><code>\b</code></td><td>word boundary</td></tr>
+            <tr><td><code>\B</code></td><td>non-word boundary</td></tr>
+            <tr><td><code>(?=abc)</code></td><td>positive lookahead: ensures that the following characters match abc, but doesn't include those characters in the matched text</td></tr>
+            <tr><td><code>(?!abc)</code></td><td>negative lookahead: ensures that the following characters do not match abc, but doesn't include those characters in the matched text</td></tr>
+            <tr><td><code>(?&lt;=abc)</code></td><td>positive lookbehind: ensures that the preceding characters match abc, but doesn't include those characters in the matched text</td></tr>
+            <tr><td><code>(?&lt;!abc)</code></td><td>negative lookbehind: ensures that the preceding characters do not match abc, but doesn't include those characters in the matched text</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -200,7 +265,7 @@ wolrd</textarea>
         match.forEach(function(group) {
           var item = tmplMatchItem.clone();
           item.find(".key").text(group.key);
-          item.find(".value").text(group.text);
+          appendText(item.find(".value"), group.text);
           list.append(item.children());
         });
 
