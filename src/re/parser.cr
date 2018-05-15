@@ -28,7 +28,7 @@ class Re::Parser
       match = Match.new
       
       result.size.times do |i|
-        a, b = build_range(result, i)
+        valid, a, b = build_range(result, i)
 
         if i == 0
           acc << [a, b]
@@ -36,7 +36,7 @@ class Re::Parser
           last = (a == b) ? b + 1 : b
         else
           key = name_table.fetch(i, i).to_s
-          match << Group.new(key: key, text: data[a...b])
+          match << Group.new(key: key, text: valid ? data[a...b] : "")
         end
       end
 
@@ -50,6 +50,13 @@ class Re::Parser
   end
 
   private def build_range(result, i)
-    {result.begin(i).not_nil!, result.end(i).not_nil!}
+    a = result.begin(i)
+    b = result.end(i)
+
+    if a.nil? || b.nil?
+      {false, -1, -1}
+    else
+      {true, a.not_nil!, b.not_nil!}
+    end
   end
 end

@@ -129,6 +129,24 @@ describe Re::Parser do
       result.ranges.should eq [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]
     end
 
+    it "group match OR non group match" do
+      result = parse("(..)|o", "", "hello")
+
+      result.matches.size.should eq 3
+      result.matches[0].groups.size.should eq 1
+
+      result.matches[0].groups[0].key.should eq "1"
+      result.matches[0].groups[0].text.should eq "he"
+
+      result.matches[1].groups[0].key.should eq "1"
+      result.matches[1].groups[0].text.should eq "ll"
+
+      result.matches[2].groups[0].key.should eq "1"
+      result.matches[2].groups[0].text.should eq ""
+
+      result.ranges.should eq [[0, 2], [2, 4], [4, 5]]
+    end
+
     it "case sensitive match" do
       expect_raises(Re::Parser::NoMatchError, "No matches") do
         parse("ll", "", "HELLO")
