@@ -36,16 +36,24 @@
       opacity: 1;
     }
 
+    .alert.alert-danger {
+      background: #fd971f;
+      border-color: #fd971f;
+      color: #54320a;
+    }
+
     .reference table code {
       white-space: nowrap;
+      color: #56d9ef;
     }
 
     .reference table tr td:first-child {
       padding-right: 1rem;
     }
 
-    table tr
-      padding-right: 1rem;
+    .reference table tr td {
+      vertical-align: top;
+    }
 
     #match_result {
       white-space: pre-wrap;
@@ -318,6 +326,11 @@ wolrd</textarea>
     function send() {
       var body = getParams();
 
+      if (body.regex === "" ||  body.text === "") {
+        clearOutput();
+        return;
+      }
+
       $.ajax({
         url: "/api/test_regex",
         type: "POST",
@@ -337,9 +350,7 @@ wolrd</textarea>
       $("#options").on('input', $.debounce(450, send));
       $("#text").on('input', $.debounce(450, send));
 
-      var params = getParams();
-      if (params.regex !== "" && params.text !== "")
-        send();
+      send();
     });
   </script>
 </body>
