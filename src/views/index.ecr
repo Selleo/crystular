@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <style>
     #templates { display: none; }
-    
+
     body {
       background: #1e1f1c;
       color: #f1f8f2;
@@ -20,12 +20,12 @@
     input {
       background: #272822 !important;
       border-color: #23241F !important;
-      color: #f8f8f2 !important; 
+      color: #f8f8f2 !important;
     }
     textarea {
       background: #272822 !important;
       border-color: #23241F !important;
-      color: #e6cf57 !important; 
+      color: #e6cf57 !important;
     }
     input:focus, textarea:focus {
       box-shadow: 0 0 0 .1rem #a6e22a !important;
@@ -35,7 +35,7 @@
       color: #595953 !important;
       opacity: 1;
     }
-    
+
     .reference table code {
       white-space: nowrap;
     }
@@ -201,6 +201,7 @@ wolrd</textarea>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
   <script>
     function clearOutput() {
       $("#errors").empty();
@@ -287,7 +288,7 @@ wolrd</textarea>
         } else {
           buf.append(appendText($('<span class="marked" />'), matchedText));
         }
-        
+
         start = b;
       });
       appendText(buf, s.substring(start, s.length));
@@ -316,7 +317,7 @@ wolrd</textarea>
 
     function send() {
       var body = getParams();
-      
+
       $.ajax({
         url: "/api/test_regex",
         type: "POST",
@@ -332,15 +333,15 @@ wolrd</textarea>
     }
 
     $(function() {
-      $("#regex").on('input', send);
-      $("#options").on('input', send);
-      $("#text").on('input', send);
-      
+      $("#regex").on('input', $.debounce(450, send));
+      $("#options").on('input', $.debounce(450, send));
+      $("#text").on('input', $.debounce(450, send));
+
       var params = getParams();
       if (params.regex !== "" && params.text !== "")
         send();
     });
   </script>
 </body>
-</html> 
+</html>
 
