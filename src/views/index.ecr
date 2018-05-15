@@ -341,7 +341,11 @@ wolrd</textarea>
           handleSuccess(response.result, body.text);
         }
       }).fail(function(response) {
-        handleError(response.responseJSON.error);
+        if (response.status === 422) {
+          handleError(response.responseJSON.error);
+        } else {
+          handleError(response.statusText);
+        }
       });
     }
 
