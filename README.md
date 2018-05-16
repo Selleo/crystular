@@ -1,27 +1,20 @@
-# crystal-regex
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+ ![Uptime Robot status](https://img.shields.io/uptimerobot/status/m780439763-859c717a1ccbfe8166e47db6.svg?style=flat-square)
+ ![CircleCI branch](https://img.shields.io/circleci/project/github/qbart/regex-crystal/master.svg?style=flat-square)
 
-TODO: Write a description here
+# regex-crystal
 
-## Installation
+Regex-crystal is a rubular expression tester written in [crystal lang](https://crystal-lang.org/), inspired by Rubular.
 
-TODO: Write installation instructions here
+Demo:
+[https://regex-crystal.herokuapp.com/](https://regex-crystal.herokuapp.com/)
 
-## Usage
+## Contribution guide
 
-TODO: Write usage instructions here
+If you find any issues please report them [here](https://github.com/qbart/regex-crystal/issues) and provide your rubular expression (with options) and test string (if needed).
 
-## Development
+You can also fork repo and create PR.
 
-TODO: Write development instructions here
+## Authors
 
-## Contributing
-
-1. Fork it ( https://github.com/[your-github-name]/crystal-regex/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
-
-## Contributors
-
-- [[your-github-name]](https://github.com/[your-github-name]) Bartlomiej Wojtowicz - creator, maintainer
+- [[qbart]](https://github.com/qbart) Bartlomiej Wojtowicz - creator, maintainer
