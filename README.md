@@ -17,4 +17,4 @@ You can also fork repo and create PR.
 
 ## Authors
 
-- [[qbart]](https://github.com/qbart) Bartlomiej Wojtowicz - creator, maintainer
+- [[qbart]](https://github.com/qbart) Bartłomiej Wójtowicz - creator, maintainer
