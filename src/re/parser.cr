@@ -3,6 +3,8 @@ class Re::Parser
   class NoMatchError < Exception; end
   class InvalidOptionError < Exception; end
 
+  RECURSION_LIMIT = 5000
+
   def parse(regex_str : String, options : String, data : String)
     raise InvalidOptionError.new("Invalid regex option") if options =~ /[^imx]/
 
@@ -12,21 +14,21 @@ class Re::Parser
     opts |= Regex::Options::EXTENDED if options.includes?("x")
 
     Result.new.tap do |acc|
-      next_match(acc, Regex.new(regex_str, opts), data, 0, true)
+      next_match(acc, Regex.new(regex_str, opts), data, 0, true, RECURSION_LIMIT)
     end
 
   rescue ex : ArgumentError
     raise ParseError.new("Parse error: #{ex.message}")
   end
 
-  private def next_match(acc, regex, data, pos, first)
+  private def next_match(acc, regex, data, pos, first, n)
     name_table = regex.name_table
     result = regex.match(data, pos)
-    
+
     if !result.nil?
       last = -1
       match = Match.new
-      
+
       result.size.times do |i|
         valid, a, b = build_range(result, i)
 
@@ -41,7 +43,7 @@ class Re::Parser
       end
 
       acc << match if !match.groups.empty?
-      next_match(acc, regex, data, last, false)
+      next_match(acc, regex, data, last, false, n - 1) if n > 1
     else
       if first
         raise NoMatchError.new("No matches found")

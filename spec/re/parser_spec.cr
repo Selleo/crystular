@@ -203,5 +203,12 @@ describe Re::Parser do
       result.matches.size.should eq 0
       result.ranges.should eq [[0, 0], [6, 6]]
     end
+
+    it "ends matching at 5000" do
+      result = parse("(a)", "", "a" * 5001)
+
+      result.matches.size.should eq 5000
+      result.ranges.size.should eq 5000
+    end
   end
 end
