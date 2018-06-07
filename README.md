@@ -11,7 +11,7 @@ Demo:
 
 ## Contribution guide
 
-If you find any issues please report them [here](https://github.com/qbart/regex-crystal/issues) and provide your rubular expression (with options) and test string (if needed).
+If you find any issues please report them [here](https://github.com/qbart/crystular/issues) and provide your rubular expression (with options) and test string (if needed).
 
 You can also fork repo and create PR.
 
