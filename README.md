@@ -1,6 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 ![Uptime Robot status](https://img.shields.io/uptimerobot/status/m780439763-859c717a1ccbfe8166e47db6.svg?style=flat-square)
-![CircleCI master](https://img.shields.io/circleci/project/github/Selleo/crystular/master.svg?style=flat-square)
+![CircleCI master](https://img.shields.io/circleci/project/gh/Selleo/crystular/master.svg?style=flat-square)
 
 # Crystular
 
