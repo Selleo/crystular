@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: crystallang/crystal:0.25.0
+      - image: crystallang/crystal:0.36.1
     steps:
       - checkout
 

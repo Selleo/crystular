@@ -1,5 +1,5 @@
 name: server
-version: 0.1.0
+version: 0.1.1
 license: MIT
 authors:
   - Bartlomiej Wojtowicz <b.wojtowicz@selleo.com>
@@ -8,12 +8,12 @@ targets:
   server:
     main: src/server.cr
 
-crystal: 0.25.0
+crystal: 0.36.1
 
 dependencies:
   kemal:
     github: kemalcr/kemal
-    version: 0.24.0
+    version: 0.27.0
 
 development_dependencies:
   spec-kemal:

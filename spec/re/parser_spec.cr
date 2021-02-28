@@ -1,5 +1,4 @@
-require "../../spec_helper"
-
+require "./../spec_helper"
 
 def parse(regex_str, options, data)
   Re::Parser.new.parse(regex_str, options, data)
