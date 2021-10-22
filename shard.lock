@@ -1,20 +1,24 @@
 version: 2.0
 shards:
+  backtracer:
+    git: https://github.com/Sija/backtracer.cr.git
+    version: 1.2.1
+
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.1.4
+    version: 0.2.0
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 0.27.0
+    version: 1.1.0
 
   kilt:
     git: https://github.com/jeromegn/kilt.git
-    version: 0.4.0
+    version: 0.6.1
 
   radix:
     git: https://github.com/luislavena/radix.git
-    version: 0.3.9
+    version: 0.4.1
 
   spec-kemal:
     git: https://github.com/kemalcr/spec-kemal.git
