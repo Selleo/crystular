@@ -1,6 +1,8 @@
 class Re::Parser
   class ParseError < Exception; end
+
   class NoMatchError < Exception; end
+
   class InvalidOptionError < Exception; end
 
   RECURSION_LIMIT = 5000
@@ -16,7 +18,6 @@ class Re::Parser
     Result.new.tap do |acc|
       next_match(acc, Regex.new(regex_str, opts), data, 0, true, RECURSION_LIMIT)
     end
-
   rescue ex : ArgumentError
     raise ParseError.new("Parse error: #{ex.message}")
   end
@@ -52,13 +53,22 @@ class Re::Parser
   end
 
   private def build_range(result, i)
-    a = result.begin(i)
-    b = result.end(i)
+    # NOTE:
+    # Happened after upgrade Crystal 0.36.1 -> 1.2.1
+    # Need to check bytes first,
+    # otherwise calling .begin(), .end()
+    # will raise an error because it forces .not_nil!
 
-    if a.nil? || b.nil?
-      {false, -1, -1}
+    a = result.byte_begin(i)
+    b = result.byte_end(i)
+
+    if a != -1 && b != -1
+      a = result.begin(i)
+      b = result.end(i)
+
+      {true, a, b}
     else
-      {true, a.not_nil!, b.not_nil!}
+      {false, -1, -1}
     end
   end
 end
