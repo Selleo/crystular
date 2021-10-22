@@ -1,11 +1,11 @@
-name: server
+name: main
 version: 0.2.0
 license: MIT
 authors:
   - Bartlomiej Wojtowicz <b.wojtowicz@selleo.com>
 
 targets:
-  server:
+  main:
     main: src/main.cr
 
 crystal: 1.2.1
